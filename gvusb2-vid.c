@@ -17,6 +17,8 @@
 
 #include "gvusb2-vid.h"
 
+//#define DEBUG_DRIVER
+
 MODULE_DESCRIPTION("gvusb2 video driver");
 MODULE_AUTHOR("Isaac Lozano <109lozanoi@gmail.com>");
 MODULE_LICENSE("Dual BSD/GPL");
@@ -152,7 +154,7 @@ void gvusb2_vid_process_data(struct gvusb2_vid *dev, u8 *buf, int len)
 		gvusb2_dbg(&dev->intf->dev, "video packet too small\n");
 		return;
 	}
-#if DEBUG_DRIVER
+#if defined(DEBUG_DRIVER)
     //dev_info_ratelimited(&dev->intf->dev, "pkt len=%d b0=%02x b1=%02x\n",
 	//	     len, buf[0], buf[1]);
 
@@ -246,7 +248,7 @@ static void gvusb2_vid_isoc_irq(struct urb *urb)
  * USB functions
  ****************************************************************************/
 
-void gvusb2_vid_free_urbs(struct gvusb2_vid *dev)
+static void gvusb2_vid_free_urbs(struct gvusb2_vid *dev)
 {
 	int i;
 
@@ -262,7 +264,7 @@ void gvusb2_vid_free_urbs(struct gvusb2_vid *dev)
 	}
 }
 
-int gvusb2_vid_allocate_urbs(struct gvusb2_vid *dev)
+static int gvusb2_vid_allocate_urbs(struct gvusb2_vid *dev)
 {
 	int i;
 
@@ -437,7 +439,7 @@ static void gvusb2_vid_check_altsetting(struct usb_interface *intf, int i,
 	}
 }
 
-int gvusb2_vid_free(struct gvusb2_vid *dev)
+static int gvusb2_vid_free(struct gvusb2_vid *dev)
 {
 	/* free urbs */
 	gvusb2_vid_free_urbs(dev);
@@ -467,7 +469,7 @@ void gvusb2_release(struct v4l2_device *v4l2_dev)
 	gvusb2_vid_free(dev);
 }
 
-int gvusb2_vid_probe(struct usb_interface *intf, const struct usb_device_id *id)
+static int gvusb2_vid_probe(struct usb_interface *intf, const struct usb_device_id *id)
 {
 	struct usb_device *udev;
 	struct gvusb2_vid *dev;
@@ -549,7 +551,7 @@ free_dev:
 	return ret;
 }
 
-void gvusb2_vid_disconnect(struct usb_interface *intf)
+static void gvusb2_vid_disconnect(struct usb_interface *intf)
 {
 	struct gvusb2_vid *dev;
 
