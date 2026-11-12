@@ -662,7 +662,7 @@ int gvusb2_v4l2_register(struct gvusb2_vid *dev)
 
 	/* make our ctrl handler */
 	ret = v4l2_ctrl_handler_init(&dev->ctrl_handler, 5);
-	if (ret < 0)
+	if (ret < 0) {
         dev_warn(&dev->intf->dev, "ctrl hanldle init error: %d\n", ret);
 		return ret;
     }
